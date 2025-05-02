@@ -30,6 +30,11 @@ OPT_ARG_TYPE_ALPHABET = Annotated[
     Alphabet, typer.Option("--alphabet", help="Seed sequence alphabet")
 ]
 
+OPT_ARG_TYPE_GENERATIONS = Annotated[
+    int,
+    typer.Option("--generations", help="Number of generations to evolve genome pool."),
+]
+
 OPT_ARG_TYPE_SUBRATE = Annotated[
     float, typer.Option("--subrate", help="Per-symbol substitution probability.")
 ]

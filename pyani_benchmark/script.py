@@ -5,9 +5,12 @@ This code defines the CLI/script for the pyani-benchmark benchmarking tool.
 
 import typer
 
+from rich.progress import track
+
 from pyani_benchmark.cli_args import (
     Alphabet,
     OPT_ARG_TYPE_ALPHABET,
+    OPT_ARG_TYPE_GENERATIONS,
     OPT_ARG_TYPE_POOLSIZE,
     OPT_ARG_TYPE_SEED,
     OPT_ARG_TYPE_SEQLEN,
@@ -23,6 +26,7 @@ app = typer.Typer()
 
 @app.command()
 def main(
+    generations: OPT_ARG_TYPE_GENERATIONS = 10,
     seed: OPT_ARG_TYPE_SEED = 0,
     seqlen: OPT_ARG_TYPE_SEQLEN = 1000000,
     seqprefix: OPT_ARG_TYPE_SEQPREFIX = "seq",
@@ -41,6 +45,16 @@ def main(
     )
     print(f"\t...random sequence {record.id} has length {len(record)}.")
     print(f"Creating sequence pool, seeding with {record.id}....")
-    pool = Pool(record, maxsize=poolsize, mutrate=subrate)
+    pool = Pool(
+        record,
+        maxsize=poolsize,
+        mutrate=subrate,
+        seqprefix=seqprefix,
+        alphabet=alphabet,
+    )
     print(f"\t...sequence pool has length {len(pool)}.")
     print(f"\t{pool.pool[0]}")
+    print(f"Evolving pool for {generations} generations.")
+    for generation in track(range(generations), description="Evolving..."):
+        pool.evolve()
+        print(f"Generation: {generation}, pool size: {len(pool)}")
