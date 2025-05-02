@@ -1,0 +1,7 @@
+__app_name__ = "pyani-benchmark"
+__app_version__ = "0.1.0"
+__description__ = "A benchmarking tool for pyani"
+__author__ = "Leighton Pritchard"
+__author_email__ = "leighton.pritchard@strath.ac.uk"
+__license__ = "MIT"
+__license_file__ = "LICENSE"
