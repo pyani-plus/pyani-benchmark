@@ -39,7 +39,7 @@ Invoke the tool with `pyani-benchmark`. To see inline help, use `pyani-benchmark
 │ --alphabet                  [dna|rna|prot]  Seed sequence alphabet [default: dna]                   │
 │ --poolsize                  INTEGER         Maximum size of evolving genome pool. [default: 100]    │
 │ --subrate                   FLOAT           Per-symbol substitution probability. [default: 0.01]    │
-│ --version                                   Show the application's version and exit.                │
+│ --version                                   Show the application version and exit.                  │
 │ --install-completion                        Install completion for the current shell.               │
 │ --show-completion                           Show completion for the current shell, to copy it or    │
 │                                             customize the installation.                             │

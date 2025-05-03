@@ -59,7 +59,7 @@ OPT_ARG_TYPE_VERSION = Annotated[
     bool,
     typer.Option(
         "--version",
-        help="Show the application's version and exit.",
+        help="Show the application version and exit.",
         callback=_version_callback,
     ),
 ]
