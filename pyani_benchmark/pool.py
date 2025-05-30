@@ -15,12 +15,14 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
 from pyani_benchmark.sequences import ALPHABETS
+from pyani_benchmark.utils import my_cmap
 
 
 class Pool:
@@ -172,6 +174,15 @@ class Pool:
         )
         plt.savefig(fpath)
         plt.clf()
+
+    def draw_heatmap(self, fpath):
+        """Draw a heatmap of the difference matrix."""
+        self.calc_difference_matrix()
+        dfm = pd.DataFrame(self._diffs, index=[genome.id for genome in self._pool])
+        dfm.columns = dfm.index
+        sns.set(font_scale=0.5)
+        sns.clustermap(dfm, cmap=my_cmap, vmin=0.8, vmax=1, figsize=(24, 24))
+        plt.savefig(fpath)
 
     def write_difference_matrix(self, fpath):
         """Write the difference matrix for the pool."""
