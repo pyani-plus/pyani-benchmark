@@ -22,7 +22,7 @@ pyani-benchmark --help
 Invoke the tool with `pyani-benchmark`. To see inline help, use `pyani-benchmark --help`.
 
 ```bash
-% pyani-benchmark --help                [10:39:45]
+% pyani-benchmark --help
 
  Usage: pyani-benchmark [OPTIONS]
 
