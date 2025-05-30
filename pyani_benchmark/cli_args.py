@@ -5,6 +5,7 @@ Defines command-line arguments in typer for the entry point.
 """
 
 from enum import Enum
+from pathlib import Path
 from typing_extensions import Annotated
 
 import typer
@@ -54,6 +55,8 @@ OPT_ARG_TYPE_SEQLEN = Annotated[
 OPT_ARG_TYPE_SEQPREFIX = Annotated[
     str, typer.Option("--seqprefix", help="Prefix string for sequences.")
 ]
+
+OPT_ARG_TYPE_OUTDIR = Annotated[Path, typer.Option("--outdir", help="Path to output directory.")]
 
 OPT_ARG_TYPE_VERSION = Annotated[
     bool,

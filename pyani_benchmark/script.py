@@ -3,6 +3,8 @@
 This code defines the CLI/script for the pyani-benchmark benchmarking tool.
 """
 
+from pathlib import Path
+
 import typer
 
 from rich.progress import track
@@ -16,6 +18,7 @@ from pyani_benchmark.cli_args import (
     OPT_ARG_TYPE_SEQLEN,
     OPT_ARG_TYPE_SEQPREFIX,
     OPT_ARG_TYPE_SUBRATE,
+    OPT_ARG_TYPE_OUTDIR,
     OPT_ARG_TYPE_VERSION,
 )
 from pyani_benchmark.pool import Pool
@@ -33,6 +36,7 @@ def main(
     alphabet: OPT_ARG_TYPE_ALPHABET = Alphabet.dna,
     poolsize: OPT_ARG_TYPE_POOLSIZE = 100,
     subrate: OPT_ARG_TYPE_SUBRATE = 0.01,
+    outdir: OPT_ARG_TYPE_OUTDIR = Path("./outdir"),
     version: OPT_ARG_TYPE_VERSION = False,
 ) -> None:
     """Entry point for the pyani-benchmark CLI."""
@@ -45,6 +49,7 @@ def main(
     )
     print(f"\t...random sequence {record.id} has length {len(record)}.")
     print(f"Creating sequence pool, seeding with {record.id}....")
+    # Generate a pool of synthetic genomes, with a single seed sequence
     pool = Pool(
         record,
         maxsize=poolsize,
@@ -55,6 +60,12 @@ def main(
     print(f"\t...sequence pool has length {len(pool)}.")
     print(f"\t{pool.pool[0]}")
     print(f"Evolving pool for {generations} generations.")
+    # Iterate for the required number of generations, making the structural/sequence
+    # changes specified at the CLI
+    if subrate <= 0:  # Set pointmutation activity to False if the rate is non-positive
+        pointmutation = False
+    else:
+        pointmutation = True
     for generation in track(range(generations), description="Evolving..."):
-        pool.evolve()
+        pool.evolve(pointmutation)
         print(f"Generation: {generation}, pool size: {len(pool)}")
