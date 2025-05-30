@@ -93,31 +93,29 @@ class Pool:
         seqpool = tuple([str(genome.seq) for genome in self._pool])
         self._diffs = self.__cached_difference_matrix(seqpool)
 
-    def mutate_genome(self, genome, pointmutation=True) -> SeqRecord:
+    def mutate_genome(self, genome) -> SeqRecord:
         """Returns a copy of the passed genome, with symbol substitutions."""
         self._seqidx += 1  # Increment global sequence index
         new_seq = str(genome.seq)
         new_id = f"{self._seqprefix}+{self._seqidx:05d}"
         self._log.append(f"Generating genome {new_id} from genome {genome.id}")
 
-        # Make single-site substitutions, if point mutations are desired
-        if pointmutation:
-            # Identify sequence positions to substitute symbols
-            indices = [
-                random.randrange(len(new_seq))
-                for _ in range(round(len(new_seq) * self._mutrate))
-            ]
-            self._log.append(f"\tMutating {len(indices)} bases in genome {new_id}")
+        # Identify sequence positions to substitute symbols
+        indices = [
+            random.randrange(len(new_seq))
+            for _ in range(round(len(new_seq) * self._mutrate))
+        ]
+        self._log.append(f"\tMutating {len(indices)} bases in genome {new_id}")
 
-            for idx in indices:
-                choices = list(set(self._alphabet) - set(new_seq[idx]))
-                new_seq = new_seq[:idx] + random.choice(choices) + new_seq[idx + 1:]
+        for idx in indices:
+            choices = list(set(self._alphabet) - set(new_seq[idx]))
+            new_seq = new_seq[:idx] + random.choice(choices) + new_seq[idx + 1:]
 
         return SeqRecord(
             Seq(new_seq), id=new_id, name=new_id, description="Evolved genome"
         )
 
-    def evolve(self, pointmutation=True):
+    def evolve(self):
         """Update the pool by a single generation.
 
         We do this by generating a new updated sequence for each genome in the pool,
@@ -127,7 +125,7 @@ class Pool:
         # Generate mutated genomes
         for genome in self._pool[:]:
             # Mutate genome or obtain direct copy, depending on setting
-            new_genome = self.mutate_genome(genome, pointmutation)
+            new_genome = self.mutate_genome(genome)
             self._log.append(
                 f"Adding genome {new_genome.id} (length: {len(new_genome.seq)}) to the pool."
             )

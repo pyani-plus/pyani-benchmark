@@ -62,12 +62,8 @@ def main(
     print(f"Evolving pool for {generations} generations.")
     # Iterate for the required number of generations, making the structural/sequence
     # changes specified at the CLI
-    if subrate <= 0:  # Set pointmutation activity to False if the rate is non-positive
-        pointmutation = False
-    else:
-        pointmutation = True
     for generation in track(range(generations), description="Evolving..."):
-        pool.evolve(pointmutation)
+        pool.evolve()
         print(f"Generation: {generation}, pool size: {len(pool)}")
 
     # At this point, the pairwise identity of the synthetic sequences
