@@ -89,4 +89,4 @@ def main(
         pool.write_difference_matrix(outdir / "inital_pool" / "inital_pool_distances.mat")
         pool.write_difference_dataframe(outdir / "inital_pool" / "inital_pool_distances.csv")
         pool.write_long_difference(outdir / "inital_pool" / "inital_pool_distances_long.csv")
-        pool.draw_heatmap(outdir / "initial_pool" / "initial_pool_distances.pdf")
+        pool.draw_heatmap(outdir / "initial_pool_heatmap.pdf")
