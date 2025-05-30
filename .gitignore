@@ -4,3 +4,7 @@
 # Distribution/Python files
 __pycache__
 *.egg-info
+
+# Useful local files during development
+outdir/
+old_script/

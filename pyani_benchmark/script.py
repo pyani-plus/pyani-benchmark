@@ -7,7 +7,7 @@ from pathlib import Path
 
 import typer
 
-from rich.progress import track
+from rich.progress import track, Progress, SpinnerColumn, TextColumn
 
 from pyani_benchmark.cli_args import (
     Alphabet,
@@ -69,3 +69,27 @@ def main(
     for generation in track(range(generations), description="Evolving..."):
         pool.evolve(pointmutation)
         print(f"Generation: {generation}, pool size: {len(pool)}")
+
+    # At this point, the pairwise identity of the synthetic sequences
+    # is determined: all columns in the sequence alignment represent a
+    # base/amino acid with common evolutionary origin.
+    # Calculate the pairwise distances and write these, and the underlying
+    # genome pool, to an output directory.
+    print(f"Calculating pairwise differences between {len(pool)} synthetic genomes.")
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        transient=False,
+    ) as progress:
+        progress.add_task(description="Calculating distances...", total=None)
+        pool.calc_difference_matrix()
+        progress.add_task(description="Writing intial pool sequences...", total=None)
+        pool.write_pool_dir(outdir / "inital_pool" / "initial_pool_sequences")
+        pool.write_pool(outdir / "inital_pool" / "initial_pool_sequences.fasta")
+        progress.add_task(description="Writing intial pool graphs...", total=None)
+        pool.write_graph(outdir / "inital_pool" / "inital_pool_graph.gml")
+        pool.draw_graph(outdir / "inital_pool" / "inital_pool_graph.pdf")
+        progress.add_task(description="Writing intial pool pairwise distances...", total=None)
+        pool.write_difference_matrix(outdir / "inital_pool" / "inital_pool_distances.mat")
+        pool.write_difference_dataframe(outdir / "inital_pool" / "inital_pool_distances.csv")
+        pool.write_long_difference(outdir / "inital_pool" / "inital_pool_distances_long.csv")

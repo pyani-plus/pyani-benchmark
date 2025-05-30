@@ -8,9 +8,13 @@ simulated genome sequences.
 import random
 
 from copy import deepcopy
+from functools import cache
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import networkx as nx
+import numpy as np
+import pandas as pd
 
 from Bio import SeqIO
 from Bio.Seq import Seq
@@ -66,6 +70,26 @@ class Pool:
         """Add a genome to the pool"""
         self._graph.add_node(genome.id)
         self._pool.append(genome)
+        self._startid = genome.id  # LUCA id
+
+    @cache
+    def __cached_difference_matrix(self, genomes):
+        """Calculate the difference matrix for a set of genomes."""
+        diffs = np.zeros((len(genomes), len(genomes)))
+        for idx, genome in enumerate(genomes):
+            for jdx, other in enumerate(genomes):
+                diffs[idx, jdx] = self.__compare_genomes(genome, other)
+        return diffs
+
+    @cache
+    def __compare_genomes(self, genome1, genome2):
+        """Compare two genomes."""
+        return sum([1 for a, b in zip(genome1, genome2) if a == b]) / len(genome1)
+
+    def calc_difference_matrix(self):
+        """Calculates the difference matrix for the pool."""
+        seqpool = tuple([str(genome.seq) for genome in self._pool])
+        self._diffs = self.__cached_difference_matrix(seqpool)
 
     def mutate_genome(self, genome, pointmutation=True) -> SeqRecord:
         """Returns a copy of the passed genome, with symbol substitutions."""
@@ -117,6 +141,10 @@ class Pool:
         with fpath.open("w") as ofh:
             ofh.write("\n".join(self._log))
 
+    def write_pool(self, fpath):
+        """Write the pool to a file."""
+        SeqIO.write(self._pool, fpath, "fasta")
+
     def write_pool_dir(self, dirpath: Path):
         """Write individual pool sequences to a directory."""
         dirpath.mkdir(parents=True, exist_ok=True)
@@ -127,6 +155,45 @@ class Pool:
     def write_graph(self, fpath: Path):
         """Write the pool graph to a file."""
         nx.write_gml(self._graph, fpath)
+
+    def draw_graph(self, fpath):
+        """Draw the pool graph."""
+        pool_names = [genome.id for genome in self._pool]
+        colour_map = [
+            "purple" if node in pool_names else "green" for node in self._graph
+        ]
+        plt.figure(1, figsize=(24, 24))
+        nx.draw(
+            self._graph,
+            pos=nx.bfs_layout(self._graph, self._startid),
+            # pos=nx.forceatlas2_layout(self._graph),
+            with_labels=True,
+            node_color=colour_map,
+        )
+        plt.savefig(fpath)
+        plt.clf()
+
+    def write_difference_matrix(self, fpath):
+        """Write the difference matrix for the pool."""
+        self.calc_difference_matrix()
+        np.savetxt(fpath, self._diffs, delimiter=",")
+
+    def write_difference_dataframe(self, fpath):
+        """Write the difference matrix for the pool as a dataframe."""
+        self.calc_difference_matrix()
+        dfm = pd.DataFrame(self._diffs, index=[genome.id for genome in self._pool])
+        dfm.columns = dfm.index
+        dfm.to_csv(fpath)
+
+    def write_long_difference(self, fpath):
+        """Write the differences to a file in long form."""
+        with fpath.open("w") as ofh:
+            dfm = pd.DataFrame(self._diffs, index=[genome.id for genome in self._pool])
+            dfm.columns = dfm.index
+            ofh.write("genome1,genome2,identity\n")
+            for idx, row in dfm.iterrows():
+                for jdx, value in row.items():
+                    ofh.write(f"{idx},{jdx},{value}\n")
 
     @property
     def log(self) -> list[str]:
