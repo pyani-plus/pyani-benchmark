@@ -84,7 +84,7 @@ class Pool:
         # Make single-site substitutions
         for idx in indices:
             choices = list(set(self._alphabet) - set(new_seq[idx]))
-            new_seq = new_seq[:idx] + random.choice(choices) + new_seq[idx + 1 :]
+            new_seq = new_seq[:idx] + random.choice(choices) + new_seq[idx + 1:]
 
         return SeqRecord(
             Seq(new_seq), id=new_id, name=new_id, description="Evolved genome"

@@ -11,13 +11,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = [
-    "biopython",
-    "networkx",
-    "numpy",
-    "rich",
-    "typer",
-]
+dependencies = ["biopython", "networkx", "mypy", "numpy", "rich", "typer"]
 
 [build-system]
 requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
