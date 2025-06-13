@@ -223,6 +223,18 @@ class Pool:
         else:
             return seq[:start] + seq[end:ins] + seq[start:end] + seq[ins:]
 
+    def __shuffle(self, seq: str, opn: tuple[str, int, int, int, int]):
+        """Shuffle two regions on the sequence"""
+        _, start1, end1, start2, end2 = opn
+        print(f"\t\tShuffle {opn}")
+        return (
+            seq[:start1]
+            + seq[start2:end2]
+            + seq[end1:start2]
+            + seq[start1:end1]
+            + seq[end2:]
+        )
+
     def apply_structural_changes(self):
         """Iterate over sequences in the pool, applying structural changes."""
         for genome in self._pool:
@@ -234,6 +246,8 @@ class Pool:
                     new_seq = self.__invert(new_seq, opn)
                 if opn[0] == "rec":  # perform recombination
                     new_seq = self.__recombine(new_seq, opn)
+                if opn[0] == "shuf":  # perform shuffling
+                    new_seq = self.__shuffle(new_seq, opn)
             # Update synthetic genome sequence
             genome.seq = Seq(new_seq)
 
