@@ -21,6 +21,8 @@ from pyani_benchmark.cli_args import (
     OPT_ARG_TYPE_INVRATE,
     OPT_ARG_TYPE_RECRATE,
     OPT_ARG_TYPE_SHUFRATE,
+    OPT_ARG_TYPE_INSRATE,
+    OPT_ARG_TYPE_INSLEN,
     OPT_ARG_TYPE_OUTDIR,
     OPT_ARG_TYPE_VERSION,
 )
@@ -42,6 +44,8 @@ def main(
     invrate: OPT_ARG_TYPE_INVRATE = 0,
     recrate: OPT_ARG_TYPE_RECRATE = 0,
     shufrate: OPT_ARG_TYPE_SHUFRATE = 0,
+    insrate: OPT_ARG_TYPE_INSRATE = 0,
+    inslen: OPT_ARG_TYPE_INSLEN = 100,
     outdir: OPT_ARG_TYPE_OUTDIR = Path("./outdir"),
     version: OPT_ARG_TYPE_VERSION = False,
 ) -> None:

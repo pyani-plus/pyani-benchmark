@@ -52,6 +52,14 @@ OPT_ARG_TYPE_SHUFRATE = Annotated[
     float, typer.Option("--shufrate", help="Per-genome shuffling probability.")
 ]
 
+OPT_ARG_TYPE_INSRATE = Annotated[
+    float, typer.Option("--insrate", help="Per-genome insertion probability.")
+]
+
+OPT_ARG_TYPE_INSLEN = Annotated[
+    int, typer.Option("--inslen", help="Average insertion sequence size.")
+]
+
 OPT_ARG_TYPE_POOLSIZE = Annotated[
     int, typer.Option("--poolsize", help="Maximum size of evolving genome pool.")
 ]
