@@ -208,6 +208,35 @@ class Pool:
         random.shuffle(self._pool)
         self._pool = self.pool[: self._maxsize]
 
+    def __invert(self, seq: str, opn: tuple[str, int, int]):
+        """Carry out sequence inversion"""
+        _, start, end = opn
+        print(f"\t\tInversion {opn}")
+        return seq[:start] + seq[start:end][::-1] + seq[end:]
+
+    def __recombine(self, seq: str, opn: tuple[str, int, int, int]):
+        """Carry out sequence recombination"""
+        _, start, end, ins = opn
+        print(f"\t\tRecombination {opn}")
+        if ins < start:
+            return seq[:ins] + seq[start:end] + seq[ins:start] + seq[end:]
+        else:
+            return seq[:start] + seq[end:ins] + seq[start:end] + seq[ins:]
+
+    def apply_structural_changes(self):
+        """Iterate over sequences in the pool, applying structural changes."""
+        for genome in self._pool:
+            print(f"\tApplying structural changes to {genome.id}")
+            new_seq = str(genome.seq)
+            # Iterate over structural operations
+            for opn in genome.operations:
+                if opn[0] == "inv":  # perform inversion
+                    new_seq = self.__invert(new_seq, opn)
+                if opn[0] == "rec":  # perform recombination
+                    new_seq = self.__recombine(new_seq, opn)
+            # Update synthetic genome sequence
+            genome.seq = Seq(new_seq)
+
     def write_log(self, fpath: Path):
         """Write the pool log to a file."""
         with fpath.open("w") as ofh:

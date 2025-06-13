@@ -47,6 +47,7 @@ def main(
 ) -> None:
     """Entry point for the pyani-benchmark CLI."""
     outdir_initial_pool = "initial_pool"
+    outdir_structure_pool = "structure_pool"
 
     # For now, we just print a message indicating that the script is running.
     # In a real implementation, you would call the main function of your benchmarking tool here.
@@ -83,6 +84,7 @@ def main(
     # base/amino acid with common evolutionary origin.
     # Calculate the pairwise distances and write these, and the underlying
     # genome pool, to an output directory.
+    # At this point, no structural changes have been applied to genomes.
     print(f"Calculating pairwise differences between {len(pool)} synthetic genomes.")
     with Progress(
         SpinnerColumn(),
@@ -110,3 +112,20 @@ def main(
             outdir / outdir_initial_pool / "initial_pool_distances_long.csv"
         )
         pool.draw_heatmap(outdir / "initial_pool_heatmap.pdf")
+
+    # Apply structural changes to genomes
+    print("Applying structural changes to {len(pool)} synthetic genomes...")
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        transient=False,
+    ) as progress:
+        progress.add_task(description="Applying structural changes...", total=None)
+        pool.apply_structural_changes()
+        progress.add_task(
+            description="Writing structural change pool sequences...", total=None
+        )
+        pool.write_pool_dir(outdir / outdir_structure_pool / "structure_pool_sequences")
+        pool.write_pool(
+            outdir / outdir_structure_pool / "structure_pool_sequences.fasta"
+        )
