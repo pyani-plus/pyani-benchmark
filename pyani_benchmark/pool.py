@@ -19,9 +19,8 @@ import seaborn as sns
 
 from Bio import SeqIO
 from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
 
-from pyani_benchmark.sequences import ALPHABETS
+from pyani_benchmark.sequences import ALPHABETS, PoolRecord
 from pyani_benchmark.utils import my_cmap
 
 
@@ -30,7 +29,7 @@ class Pool:
 
     def __init__(
         self,
-        genome: SeqRecord,
+        genome: PoolRecord,
         maxsize: int = 100,
         mutrate: float = 0.01,
         invrate: float = 0,
@@ -66,7 +65,7 @@ class Pool:
         self._log: list[str] = ["Initialising pool..."]
         self._graph: nx.DiGraph = nx.DiGraph()  # Records relationships between genomes
         self._seqidx = 0  # Count of sequences, used to generate unique IDs
-        self._pool: list = []  # Collection of genome SeqRecords
+        self._pool: list = []  # Collection of genome PoolRecords
         self._seqprefix = seqprefix
         self._alphabet = ALPHABETS[alphabet]
 
@@ -116,7 +115,7 @@ class Pool:
         seqpool = tuple([str(genome.seq) for genome in self._pool])
         self._diffs = self.__cached_difference_matrix(seqpool)
 
-    def mutate_genome(self, genome) -> SeqRecord:
+    def mutate_genome(self, genome) -> PoolRecord:
         """Returns a copy of the passed genome, with symbol substitutions."""
         self._seqidx += 1  # Increment global sequence index
         new_seq = str(genome.seq)
@@ -134,8 +133,8 @@ class Pool:
             choices = list(set(self._alphabet) - set(new_seq[idx]))
             new_seq = new_seq[:idx] + random.choice(choices) + new_seq[idx + 1 :]
 
-        # Create a new SeqRecord for the mutated sequence
-        new_record = SeqRecord(
+        # Create a new PoolRecord for the mutated sequence
+        new_record = PoolRecord(
             Seq(new_seq), id=new_id, name=new_id, description="Evolved genome"
         )
         new_record.operations = genome.operations.copy()
@@ -283,7 +282,7 @@ class Pool:
         return self._log[:]
 
     @property
-    def pool(self) -> list[SeqRecord]:
+    def pool(self) -> list[PoolRecord]:
         """Return a copy of the pool."""
         return deepcopy(self._pool)
 
