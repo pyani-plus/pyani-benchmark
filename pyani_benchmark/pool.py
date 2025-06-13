@@ -97,7 +97,7 @@ class Pool:
         """Returns a copy of the passed genome, with symbol substitutions."""
         self._seqidx += 1  # Increment global sequence index
         new_seq = str(genome.seq)
-        new_id = f"{self._seqprefix}+{self._seqidx:05d}"
+        new_id = f"{self._seqprefix}_{self._seqidx:05d}"
         self._log.append(f"Generating genome {new_id} from genome {genome.id}")
 
         # Identify sequence positions to substitute symbols
