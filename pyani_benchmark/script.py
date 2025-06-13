@@ -19,6 +19,8 @@ from pyani_benchmark.cli_args import (
     OPT_ARG_TYPE_SEQPREFIX,
     OPT_ARG_TYPE_SUBRATE,
     OPT_ARG_TYPE_INVRATE,
+    OPT_ARG_TYPE_RECRATE,
+    OPT_ARG_TYPE_SHUFRATE,
     OPT_ARG_TYPE_OUTDIR,
     OPT_ARG_TYPE_VERSION,
 )
@@ -38,6 +40,8 @@ def main(
     poolsize: OPT_ARG_TYPE_POOLSIZE = 100,
     subrate: OPT_ARG_TYPE_SUBRATE = 0.01,
     invrate: OPT_ARG_TYPE_INVRATE = 0,
+    recrate: OPT_ARG_TYPE_RECRATE = 0,
+    shufrate: OPT_ARG_TYPE_SHUFRATE = 0,
     outdir: OPT_ARG_TYPE_OUTDIR = Path("./outdir"),
     version: OPT_ARG_TYPE_VERSION = False,
 ) -> None:
@@ -60,6 +64,8 @@ def main(
         maxsize=poolsize,
         mutrate=subrate,
         invrate=invrate,
+        recrate=recrate,
+        shufrate=shufrate,
         seqprefix=seqprefix,
         alphabet=alphabet,
     )

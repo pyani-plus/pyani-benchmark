@@ -44,6 +44,14 @@ OPT_ARG_TYPE_INVRATE = Annotated[
     float, typer.Option("--invrate", help="Per-genome random inversion probability.")
 ]
 
+OPT_ARG_TYPE_RECRATE = Annotated[
+    float, typer.Option("--recrate", help="Per-genome recombination probability.")
+]
+
+OPT_ARG_TYPE_SHUFRATE = Annotated[
+    float, typer.Option("--shufrate", help="Per-genome shuffling probability.")
+]
+
 OPT_ARG_TYPE_POOLSIZE = Annotated[
     int, typer.Option("--poolsize", help="Maximum size of evolving genome pool.")
 ]

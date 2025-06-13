@@ -25,7 +25,7 @@ def generate_random_sequence(
     seed=0,
 ) -> SeqRecord:
     """Returns a SeqRecord with random sequence of given length.
-    
+
     This SeqRecord object also contains an operations attribute.
     This is an empty list by default.
     """

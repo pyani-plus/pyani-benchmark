@@ -34,16 +34,18 @@ class Pool:
         maxsize: int = 100,
         mutrate: float = 0.01,
         invrate: float = 0,
+        recrate: float = 0,
+        shufrate: float = 0,
         seqprefix="seq",
         alphabet="dna",
     ):
         """Initialises the Pool with a seed genome."""
         self.__initialise__(
-            genome, maxsize, mutrate, invrate, seqprefix, alphabet
+            genome, maxsize, mutrate, invrate, recrate, shufrate, seqprefix, alphabet
         )  # Initialise pool properties
 
     def __initialise__(
-        self, genome, maxsize: int, mutrate: float, invrate: float, seqprefix: str, alphabet: str
+        self, genome, maxsize: int, mutrate: float, invrate: float, recrate: float, shufrate: float, seqprefix: str, alphabet: str
     ):
         """Initialises empty pool data."""
         self._log: list[str] = ["Initialising pool..."]
@@ -59,6 +61,8 @@ class Pool:
             mutrate  # Base mutation/substitution rate per base between generations
         )
         self._invrate = invrate  # Probability of an inversion for a genome, between generations
+        self._recrate = recrate  # Probability of internal recombination for a genome, between generations
+        self._shufrate = shufrate  # Probability of shuffling two regions on the genome, between generations
         self._log.append(
             f"Initialised pool with maxsize {self._maxsize} and substitution rate {self._mutrate}"
         )
@@ -114,18 +118,42 @@ class Pool:
             new_seq = new_seq[:idx] + random.choice(choices) + new_seq[idx + 1:]
 
         # Create a new SeqRecord for the mutated sequence
-        new_record =  SeqRecord(
+        new_record = SeqRecord(
             Seq(new_seq), id=new_id, name=new_id, description="Evolved genome"
         )
         new_record.operations = genome.operations.copy()
 
-        # Apply structural changes where these a required
+        # Apply structural changes where these are required
         # Inversion: inverts a region between two points on the genome
         if random.random() < self._invrate:  # Trigger an inversion event
             print(f"\tInversion event triggered for sequence {new_id}")
             start, end = sorted([random.randrange(len(new_seq)), random.randrange(len(new_seq))])
             print(f"\t\tInverting region [{start}, {end}]")
             new_record.operations.append(("inv", start, end))
+
+        # Recombination: moves a region from one point on the genome to another
+        if random.random() < self._recrate:
+            print(f"\tRecombination event triggered for sequence {new_id}")
+            if random.random() < 0.5:  # move region towards start
+                ins, start, end = sorted([random.randrange(len(new_seq)),
+                                          random.randrange(len(new_seq)),
+                                          random.randrange(len(new_seq))])
+            else:  # move region towards end
+                start, end, ins = sorted([random.randrange(len(new_seq)),
+                                          random.randrange(len(new_seq)),
+                                          random.randrange(len(new_seq))])
+            print(f"\t\tRecombination of [{start}, {end}] at {ins}")
+            new_record.operations.append(("rec", start, end, ins))
+
+        # Shuffle: exchanges two regions on the genome
+        if random.random() < self._shufrate:
+            print(f"\tShuffle triggered for sequence {new_id}")
+            start1, end1, start2, end2 = sorted([random.randrange(len(new_seq)),
+                                                 random.randrange(len(new_seq)),
+                                                 random.randrange(len(new_seq)),
+                                                 random.randrange(len(new_seq)),])
+            print(f"\t\tShuffling regions [{start1}, {end1}] and [{start2}, {end2}]")
+            new_record.operations.append(("shuf", start1, end1, start2, end2))
 
         return new_record
 
