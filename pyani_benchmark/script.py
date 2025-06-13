@@ -18,6 +18,7 @@ from pyani_benchmark.cli_args import (
     OPT_ARG_TYPE_SEQLEN,
     OPT_ARG_TYPE_SEQPREFIX,
     OPT_ARG_TYPE_SUBRATE,
+    OPT_ARG_TYPE_INVRATE,
     OPT_ARG_TYPE_OUTDIR,
     OPT_ARG_TYPE_VERSION,
 )
@@ -36,6 +37,7 @@ def main(
     alphabet: OPT_ARG_TYPE_ALPHABET = Alphabet.dna,
     poolsize: OPT_ARG_TYPE_POOLSIZE = 100,
     subrate: OPT_ARG_TYPE_SUBRATE = 0.01,
+    invrate: OPT_ARG_TYPE_INVRATE = 0,
     outdir: OPT_ARG_TYPE_OUTDIR = Path("./outdir"),
     version: OPT_ARG_TYPE_VERSION = False,
 ) -> None:
@@ -46,6 +48,7 @@ def main(
     # In a real implementation, you would call the main function of your benchmarking tool here.
     print("Running pyani-benchmark script...")
     print("Generating random sequence record...")
+    # Create a random genome sequence here.
     record = generate_random_sequence(
         seqprefix=seqprefix, length=seqlen, alphabet=alphabet
     )
@@ -56,6 +59,7 @@ def main(
         record,
         maxsize=poolsize,
         mutrate=subrate,
+        invrate=invrate,
         seqprefix=seqprefix,
         alphabet=alphabet,
     )

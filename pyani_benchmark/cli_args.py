@@ -40,6 +40,10 @@ OPT_ARG_TYPE_SUBRATE = Annotated[
     float, typer.Option("--subrate", help="Per-symbol substitution probability.")
 ]
 
+OPT_ARG_TYPE_INVRATE = Annotated[
+    float, typer.Option("--invrate", help="Per-genome random inversion probability.")
+]
+
 OPT_ARG_TYPE_POOLSIZE = Annotated[
     int, typer.Option("--poolsize", help="Maximum size of evolving genome pool.")
 ]

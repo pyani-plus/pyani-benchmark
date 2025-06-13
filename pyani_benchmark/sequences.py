@@ -24,7 +24,11 @@ def generate_random_sequence(
     alphabet="dna",
     seed=0,
 ) -> SeqRecord:
-    """Returns a SeqRecord with random sequence of given length"""
+    """Returns a SeqRecord with random sequence of given length.
+    
+    This SeqRecord object also contains an operations attribute.
+    This is an empty list by default.
+    """
     if seed != 0:  # Allow for reproducible random sequence
         random.seed(seed)
     seqid = f"{seqprefix}_00000"
@@ -34,4 +38,5 @@ def generate_random_sequence(
         name=seqid,
         description=description,
     )
+    record.operations = []  # Will hold structural operations
     return record

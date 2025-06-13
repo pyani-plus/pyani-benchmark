@@ -33,16 +33,17 @@ class Pool:
         genome: SeqRecord,
         maxsize: int = 100,
         mutrate: float = 0.01,
+        invrate: float = 0,
         seqprefix="seq",
         alphabet="dna",
     ):
         """Initialises the Pool with a seed genome."""
         self.__initialise__(
-            genome, maxsize, mutrate, seqprefix, alphabet
+            genome, maxsize, mutrate, invrate, seqprefix, alphabet
         )  # Initialise pool properties
 
     def __initialise__(
-        self, genome, maxsize: int, mutrate: float, seqprefix: str, alphabet: str
+        self, genome, maxsize: int, mutrate: float, invrate: float, seqprefix: str, alphabet: str
     ):
         """Initialises empty pool data."""
         self._log: list[str] = ["Initialising pool..."]
@@ -57,6 +58,7 @@ class Pool:
         self._mutrate = (
             mutrate  # Base mutation/substitution rate per base between generations
         )
+        self._invrate = invrate  # Probability of an inversion for a genome, between generations
         self._log.append(
             f"Initialised pool with maxsize {self._maxsize} and substitution rate {self._mutrate}"
         )
@@ -107,13 +109,25 @@ class Pool:
         ]
         self._log.append(f"\tMutating {len(indices)} bases in genome {new_id}")
 
-        for idx in indices:
+        for idx in indices:  # Make point mutations and create a new sequence
             choices = list(set(self._alphabet) - set(new_seq[idx]))
             new_seq = new_seq[:idx] + random.choice(choices) + new_seq[idx + 1:]
 
-        return SeqRecord(
+        # Create a new SeqRecord for the mutated sequence
+        new_record =  SeqRecord(
             Seq(new_seq), id=new_id, name=new_id, description="Evolved genome"
         )
+        new_record.operations = genome.operations.copy()
+
+        # Apply structural changes where these a required
+        # Inversion: inverts a region between two points on the genome
+        if random.random() < self._invrate:  # Trigger an inversion event
+            print(f"\tInversion event triggered for sequence {new_id}")
+            start, end = sorted([random.randrange(len(new_seq)), random.randrange(len(new_seq))])
+            print(f"\t\tInverting region [{start}, {end}]")
+            new_record.operations.append(("inv", start, end))
+
+        return new_record
 
     def evolve(self):
         """Update the pool by a single generation.
