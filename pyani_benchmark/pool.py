@@ -41,11 +41,26 @@ class Pool:
     ):
         """Initialises the Pool with a seed genome."""
         self.__initialise__(
-            genome, maxsize, mutrate, invrate, recrate, shufrate, seqprefix, alphabet
+            genome,
+            maxsize,
+            mutrate,
+            invrate,
+            recrate,
+            shufrate,
+            seqprefix,
+            alphabet,
         )  # Initialise pool properties
 
     def __initialise__(
-        self, genome, maxsize: int, mutrate: float, invrate: float, recrate: float, shufrate: float, seqprefix: str, alphabet: str
+        self,
+        genome,
+        maxsize: int,
+        mutrate: float,
+        invrate: float,
+        recrate: float,
+        shufrate: float,
+        seqprefix: str,
+        alphabet: str,
     ):
         """Initialises empty pool data."""
         self._log: list[str] = ["Initialising pool..."]
@@ -60,7 +75,9 @@ class Pool:
         self._mutrate = (
             mutrate  # Base mutation/substitution rate per base between generations
         )
-        self._invrate = invrate  # Probability of an inversion for a genome, between generations
+        self._invrate = (
+            invrate  # Probability of an inversion for a genome, between generations
+        )
         self._recrate = recrate  # Probability of internal recombination for a genome, between generations
         self._shufrate = shufrate  # Probability of shuffling two regions on the genome, between generations
         self._log.append(
@@ -115,7 +132,7 @@ class Pool:
 
         for idx in indices:  # Make point mutations and create a new sequence
             choices = list(set(self._alphabet) - set(new_seq[idx]))
-            new_seq = new_seq[:idx] + random.choice(choices) + new_seq[idx + 1:]
+            new_seq = new_seq[:idx] + random.choice(choices) + new_seq[idx + 1 :]
 
         # Create a new SeqRecord for the mutated sequence
         new_record = SeqRecord(
@@ -127,7 +144,9 @@ class Pool:
         # Inversion: inverts a region between two points on the genome
         if random.random() < self._invrate:  # Trigger an inversion event
             print(f"\tInversion event triggered for sequence {new_id}")
-            start, end = sorted([random.randrange(len(new_seq)), random.randrange(len(new_seq))])
+            start, end = sorted(
+                [random.randrange(len(new_seq)), random.randrange(len(new_seq))]
+            )
             print(f"\t\tInverting region [{start}, {end}]")
             new_record.operations.append(("inv", start, end))
 
@@ -135,23 +154,35 @@ class Pool:
         if random.random() < self._recrate:
             print(f"\tRecombination event triggered for sequence {new_id}")
             if random.random() < 0.5:  # move region towards start
-                ins, start, end = sorted([random.randrange(len(new_seq)),
-                                          random.randrange(len(new_seq)),
-                                          random.randrange(len(new_seq))])
+                ins, start, end = sorted(
+                    [
+                        random.randrange(len(new_seq)),
+                        random.randrange(len(new_seq)),
+                        random.randrange(len(new_seq)),
+                    ]
+                )
             else:  # move region towards end
-                start, end, ins = sorted([random.randrange(len(new_seq)),
-                                          random.randrange(len(new_seq)),
-                                          random.randrange(len(new_seq))])
+                start, end, ins = sorted(
+                    [
+                        random.randrange(len(new_seq)),
+                        random.randrange(len(new_seq)),
+                        random.randrange(len(new_seq)),
+                    ]
+                )
             print(f"\t\tRecombination of [{start}, {end}] at {ins}")
             new_record.operations.append(("rec", start, end, ins))
 
         # Shuffle: exchanges two regions on the genome
         if random.random() < self._shufrate:
             print(f"\tShuffle triggered for sequence {new_id}")
-            start1, end1, start2, end2 = sorted([random.randrange(len(new_seq)),
-                                                 random.randrange(len(new_seq)),
-                                                 random.randrange(len(new_seq)),
-                                                 random.randrange(len(new_seq)),])
+            start1, end1, start2, end2 = sorted(
+                [
+                    random.randrange(len(new_seq)),
+                    random.randrange(len(new_seq)),
+                    random.randrange(len(new_seq)),
+                    random.randrange(len(new_seq)),
+                ]
+            )
             print(f"\t\tShuffling regions [{start1}, {end1}] and [{start2}, {end2}]")
             new_record.operations.append(("shuf", start1, end1, start2, end2))
 

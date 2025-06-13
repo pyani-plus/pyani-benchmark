@@ -21,8 +21,6 @@ from pyani_benchmark.cli_args import (
     OPT_ARG_TYPE_INVRATE,
     OPT_ARG_TYPE_RECRATE,
     OPT_ARG_TYPE_SHUFRATE,
-    OPT_ARG_TYPE_INSRATE,
-    OPT_ARG_TYPE_INSLEN,
     OPT_ARG_TYPE_OUTDIR,
     OPT_ARG_TYPE_VERSION,
 )
@@ -44,8 +42,6 @@ def main(
     invrate: OPT_ARG_TYPE_INVRATE = 0,
     recrate: OPT_ARG_TYPE_RECRATE = 0,
     shufrate: OPT_ARG_TYPE_SHUFRATE = 0,
-    insrate: OPT_ARG_TYPE_INSRATE = 0,
-    inslen: OPT_ARG_TYPE_INSLEN = 100,
     outdir: OPT_ARG_TYPE_OUTDIR = Path("./outdir"),
     version: OPT_ARG_TYPE_VERSION = False,
 ) -> None:
@@ -101,8 +97,16 @@ def main(
         progress.add_task(description="Writing initial pool graphs...", total=None)
         pool.write_graph(outdir / outdir_initial_pool / "initial_pool_graph.gml")
         pool.draw_graph(outdir / outdir_initial_pool / "initial_pool_graph.pdf")
-        progress.add_task(description="Writing initial pool pairwise distances...", total=None)
-        pool.write_difference_matrix(outdir / outdir_initial_pool / "initial_pool_distances.mat")
-        pool.write_difference_dataframe(outdir / outdir_initial_pool / "initial_pool_distances.csv")
-        pool.write_long_difference(outdir / outdir_initial_pool / "initial_pool_distances_long.csv")
+        progress.add_task(
+            description="Writing initial pool pairwise distances...", total=None
+        )
+        pool.write_difference_matrix(
+            outdir / outdir_initial_pool / "initial_pool_distances.mat"
+        )
+        pool.write_difference_dataframe(
+            outdir / outdir_initial_pool / "initial_pool_distances.csv"
+        )
+        pool.write_long_difference(
+            outdir / outdir_initial_pool / "initial_pool_distances_long.csv"
+        )
         pool.draw_heatmap(outdir / "initial_pool_heatmap.pdf")
