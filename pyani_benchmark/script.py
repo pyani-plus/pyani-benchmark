@@ -40,6 +40,8 @@ def main(
     version: OPT_ARG_TYPE_VERSION = False,
 ) -> None:
     """Entry point for the pyani-benchmark CLI."""
+    outdir_initial_pool = "initial_pool"
+
     # For now, we just print a message indicating that the script is running.
     # In a real implementation, you would call the main function of your benchmarking tool here.
     print("Running pyani-benchmark script...")
@@ -79,14 +81,14 @@ def main(
     ) as progress:
         progress.add_task(description="Calculating distances...", total=None)
         pool.calc_difference_matrix()
-        progress.add_task(description="Writing intial pool sequences...", total=None)
-        pool.write_pool_dir(outdir / "inital_pool" / "initial_pool_sequences")
-        pool.write_pool(outdir / "inital_pool" / "initial_pool_sequences.fasta")
-        progress.add_task(description="Writing intial pool graphs...", total=None)
-        pool.write_graph(outdir / "inital_pool" / "inital_pool_graph.gml")
-        pool.draw_graph(outdir / "inital_pool" / "inital_pool_graph.pdf")
-        progress.add_task(description="Writing intial pool pairwise distances...", total=None)
-        pool.write_difference_matrix(outdir / "inital_pool" / "inital_pool_distances.mat")
-        pool.write_difference_dataframe(outdir / "inital_pool" / "inital_pool_distances.csv")
-        pool.write_long_difference(outdir / "inital_pool" / "inital_pool_distances_long.csv")
+        progress.add_task(description="Writing initial pool sequences...", total=None)
+        pool.write_pool_dir(outdir / outdir_initial_pool / "initial_pool_sequences")
+        pool.write_pool(outdir / outdir_initial_pool / "initial_pool_sequences.fasta")
+        progress.add_task(description="Writing initial pool graphs...", total=None)
+        pool.write_graph(outdir / outdir_initial_pool / "initial_pool_graph.gml")
+        pool.draw_graph(outdir / outdir_initial_pool / "initial_pool_graph.pdf")
+        progress.add_task(description="Writing initial pool pairwise distances...", total=None)
+        pool.write_difference_matrix(outdir / outdir_initial_pool / "initial_pool_distances.mat")
+        pool.write_difference_dataframe(outdir / outdir_initial_pool / "initial_pool_distances.csv")
+        pool.write_long_difference(outdir / outdir_initial_pool / "initial_pool_distances_long.csv")
         pool.draw_heatmap(outdir / "initial_pool_heatmap.pdf")
