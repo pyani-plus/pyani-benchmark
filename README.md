@@ -1,18 +1,18 @@
-# `benchmark`
+# `pyani-benchmark`
 
-`benchmark` is a helper package for [`pyani-plus`](https://github.com/pyani-plus/pyani-plus) that generates mock bacterial genome sequences with known pairwise sequence identities. It is intended for benchmarking the accuracy and precision of genome distance calculation/estimation tools, including `pyani-plus`.
+`pyani-benchmark` is a helper package for [`pyani-plus`](https://github.com/pyani-plus/pyani-plus) that generates mock bacterial genome sequences with known pairwise sequence identities. It is intended for benchmarking the accuracy and precision of genome distance calculation/estimation tools, including `pyani-plus`.
 
 ## Installation
 
-1. Clone the repository from [https://github.com/pyani-plus/benchmark](https://github.com/pyani-plus/benchmark).
-2. Change to the `benchmark` directory.
+1. Clone the repository from [https://github.com/pyani-plus/benchmark](https://github.com/pyani-plus/pyani-benchmark).
+2. Change to the `pyani-benchmark` directory.
 3. Install using `pip install -U -e .
 
 The benchmark tool will be available as `pyani-benchmark`
 
 ```bash
-git clone git@github.com:pyani-plus/benchmark.git
-cd benchmark
+git clone git@github.com:pyani-plus/pyani-benchmark.git
+cd pyani-benchmark
 pip install -U -e .
 pyani-benchmark --help
 ```
