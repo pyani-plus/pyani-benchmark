@@ -1,5 +1,7 @@
 # `pyani-benchmark`
 
+[![DOI](https://zenodo.org/badge/976685026.svg)](https://doi.org/10.5281/zenodo.15873137)
+
 `pyani-benchmark` is a helper package for [`pyani-plus`](https://github.com/pyani-plus/pyani-plus) that generates mock bacterial genome sequences with known pairwise sequence identities. It is intended for benchmarking the accuracy and precision of genome distance calculation/estimation tools, including `pyani-plus`.
 
 ## Installation
