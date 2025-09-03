@@ -20,6 +20,7 @@ dependencies = [
     "mypy",
     "numpy",
     "rich",
+    "scipy",
     "typer",
 ]
 

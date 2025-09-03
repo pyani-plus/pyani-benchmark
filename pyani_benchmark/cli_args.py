@@ -19,6 +19,7 @@ class Alphabet(str, Enum):
     dna = "dna"
     rna = "rna"
     prot = "prot"
+    at75 = "at75"
 
 
 def _version_callback(value: bool) -> None:

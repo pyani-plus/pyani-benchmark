@@ -14,6 +14,7 @@ ALPHABETS = {
     "dna": list("ACGT"),
     "rna": list("ACGU"),
     "prot": list("ACDEFGHIKLMNPQRSTVWY"),
+    "at75": list("AAATTTCG"),
 }
 
 
